@@ -6,7 +6,7 @@ test = pd.read_csv("data/raw/test.csv")
 
 user_profile = pd.DataFrame(train.groupby("user_id").count().index)
 user_profile = user_profile.merge(train[["user_id","user_age","user_gender"]].groupby("user_id").mean().reset_index(),on="user_id")
-user_profile.to_csv("data/inter/user_profile.csv",index=False)
+user_profile.to_csv("data/raw/user_profile.csv",index=False)
 
 def preprocess_data(df):
 
@@ -21,7 +21,7 @@ def preprocess_data(df):
     df.loc[(df["date_listen"].dt.hour>=18) & (df["date_listen"].dt.hour<20),"moment_listen"]="late_afternoon"
     df.loc[(df["date_listen"].dt.hour>=20) | (df["date_listen"].dt.hour<2),"moment_listen"]="evening"
 
-    df["weekday_listen"] = train["date_listen"].dt.weekday
+    df["weekday_listen"] = df["date_listen"].dt.weekday
 
     df.loc[(df["release_date"].dt.year<1960),"release_period"]="before 60s"
     df.loc[(df["release_date"].dt.year>=1960) & (df["release_date"].dt.year<1980),"release_period"]="60s - 80s"
@@ -29,6 +29,11 @@ def preprocess_data(df):
     df.loc[(df["release_date"].dt.year>=2010),"release_period"]="after 2010s"
 
     df["recent_media"]=((df["date_listen"]-df["release_date"]).dt.days<7*25).astype(int)
+
+    #Drop useless rows, that couldn't be deal by algorithms
+    df.drop("ts_listen",axis=1,inplace=True)
+    df.drop("release_date",axis=1,inplace=True)
+    df.drop("date_listen",axis=1,inplace=True)
 
     return df
 

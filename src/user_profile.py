@@ -2,7 +2,7 @@ import pandas as pd
 from scipy import stats
 
 train = pd.read_csv("data/inter/train.csv")
-user_profile = pd.read_csv("data/inter/user_profile.csv")
+user_profile = pd.read_csv("data/raw/user_profile.csv")
 
 user_profile["user_occurence"]=train.groupby("user_id").count().iloc[:,1]
 
@@ -42,7 +42,7 @@ user_profile.rename(columns={'recent_media':'like_recent_media'},inplace=True)
 user_profile = pd.merge(user_profile,train[["genre_id","user_id"]].groupby("user_id").max().reset_index(),on="user_id")
 user_profile.rename(columns={'genre_id':'prefered_genre_id'},inplace=True)
 
-user_profile = pd.merge(user_profile,((train[["album_id","user_id"]].groupby(["user_id"]).nunique()["album_id"])/train[["user_id"]].groupby("user_id").size()).reset_index(),on="user_id")
+user_profile = pd.merge(user_profile,((train[["album_id","user_id"]].groupby("user_id").nunique()["album_id"])/train[["user_id"]].groupby("user_id").size()).reset_index(),on="user_id")
 user_profile.rename(columns={0:'user_album_per_media'},inplace=True)
 
-user_profile.to_csv("data/processed/user_profile.csv",index=False)
+user_profile.to_csv("data/inter/user_profile.csv",index=False)
