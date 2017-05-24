@@ -1,0 +1,19 @@
+# Data & Ouputs
+data
+output
+
+# Unmaintained code
+old
+
+# Config file
+config.yml
+
+# Notebooks
+.ipynb_checkpoints
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+
+# C extensions
+*.so
