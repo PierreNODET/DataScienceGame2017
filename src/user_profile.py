@@ -1,8 +1,9 @@
 import pandas as pd
 from scipy import stats
+from make_dir import cmd_folder
 
-train = pd.read_csv("data/inter/train.csv")
-user_profile = pd.read_csv("data/raw/user_profile.csv")
+train = pd.read_csv(cmd_folder+"data/inter/train.csv")
+user_profile = pd.read_csv(cmd_folder+"data/raw/user_profile.csv")
 
 user_profile["user_occurence"]=train.groupby("user_id").count().iloc[:,1]
 
@@ -30,17 +31,17 @@ user_profile["weekend"]=user_profile[5]+user_profile[6]
 user_profile.drop([0,1,2,3,4,5,6],axis=1,inplace=True)
 
 #train["release_period"]=pd.Series(train["release_period"],dtype="category")
-user_profile = pd.merge(user_profile,train[["release_period","user_id"]].groupby("user_id").apply(pd.DataFrame.mode),on="user_id")
-user_profile.rename(columns={'release_period':'prefered_release_period'},inplace=True)
+#user_profile = pd.merge(user_profile,train[["release_period","user_id"]].groupby("user_id").apply(pd.DataFrame.mode),on="user_id")
+#user_profile.rename(columns={'release_period':'prefered_release_period'},inplace=True)
 
 user_profile = pd.merge(user_profile,train[["is_listened","user_id"]].groupby("user_id").mean().reset_index(),on="user_id")
 user_profile.rename(columns={'is_listened':'mean_is_listened'},inplace=True)
 
-user_profile = pd.merge(user_profile,train[["recent_media","user_id"]].groupby("user_id").mean().reset_index(),on="user_id")
-user_profile.rename(columns={'recent_media':'like_recent_media'},inplace=True)
+#user_profile = pd.merge(user_profile,train[["recent_media","user_id"]].groupby("user_id").mean().reset_index(),on="user_id")
+#user_profile.rename(columns={'recent_media':'like_recent_media'},inplace=True)
 
-user_profile = pd.merge(user_profile,train[["genre_id","user_id"]].groupby("user_id").max().reset_index(),on="user_id")
-user_profile.rename(columns={'genre_id':'prefered_genre_id'},inplace=True)
+#user_profile = pd.merge(user_profile,train[["genre_id","user_id"]].groupby("user_id").max().reset_index(),on="user_id")
+#user_profile.rename(columns={'genre_id':'prefered_genre_id'},inplace=True)
 
 user_profile = pd.merge(user_profile,((train[["album_id","user_id"]].groupby("user_id").nunique()["album_id"])/train[["user_id"]].groupby("user_id").size()).reset_index(),on="user_id")
 user_profile.rename(columns={0:'user_album_per_media'},inplace=True)

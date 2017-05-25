@@ -1,7 +1,7 @@
 import pandas as pd
+from src.make_dir import cmd_folder
 
-train = pd.read_csv("data/inter/train.csv")
-test = pd.read_csv("data/inter/test.csv")
+train = pd.read_csv(cmd_folder+"data/inter/train.csv")
 
 def generate_learning_validation(df):
 
