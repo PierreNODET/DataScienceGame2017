@@ -9,7 +9,11 @@ artist_infos = pd.read_csv(cmd_folder + '/data/raw/infos_artists.csv')
 
 artist_profile = pd.merge(artist_infos,artist_profile,on="artist_id",how="outer")
 
+artist_profile["radio"] = artist_profile["radio"].astype(float)
+
 artist_profile = artist_profile.merge(train[["artist_id","is_listened"]].groupby("artist_id").mean().reset_index(),on="artist_id",how="outer")
 artist_profile.rename(columns={'is_listened':'mean_artist_is_listened'},inplace=True)
 
-artist_profile.to_csv(cmd_folder + '/data/inter/media_profile.csv',index=False)
+artist_profile.to_csv(cmd_folder + '/data/inter/artist_profile.csv',index=False)
+
+artist_profile.to_csv(cmd_folder + '/data/processed/artist_profile.csv',index=False)
